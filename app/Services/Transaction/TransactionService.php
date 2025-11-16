@@ -2,47 +2,60 @@
 
 namespace App\Services\Transaction;
 
-use App\Events\TransactionCreated;
+use App\Events\TransactionReceived;
+use App\Events\TransactionSent;
+use App\Exceptions\TransactionException;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Repositories\TransactionRepository;
 use Illuminate\Support\Facades\DB;
-use InvalidArgumentException;
 
 class TransactionService
 {
-    private const COMMISSION_FEE_PERCENTAGE = 1.5;
+
+    private float $commissionFeePercentage;
 
     public function __construct(
         private TransactionRepository $transactionRepository
-    ){}
+    ){
+        $this->commissionFeePercentage = config('wallet.commission_fee_percentage');
+    }
+
+    private function calculateCommissionFee(float $amount): float
+    {
+        return $amount * ($this->commissionFeePercentage / 100);
+    }
 
     /**
      * Stores a new transaction, ensuring atomic balance update using database transactions and pessimistic locking.
      *
      * @param \App\Models\User $user The authenticated sender user.
-     * @param array $data Contains 'receiver_id' and 'amount'.
+     * @param array $data
      * @return Transaction
-     * @throws InvalidArgumentException
+     * @throws TransactionException
      */
     public function storeTransaction(User $user, array $data): Transaction
     {
         if (empty($data['receiver_id'])) {
-            throw new InvalidArgumentException('Receiver ID is required.');
+            throw new TransactionException('Receiver ID is required.');
         }
 
-        // 1. Basic validation and calculation outside the transaction
         $receiverUser = User::find($data['receiver_id']);
 
         if (!$receiverUser) {
-            throw new InvalidArgumentException('Receiver user not found.');
+            throw new TransactionException('Receiver user not found.');
         }
 
         if ($user->id === $receiverUser->id) {
-            throw new InvalidArgumentException('You cannot send a transaction to yourself.');
+            throw new TransactionException('You cannot send a transaction to yourself.');
         }
 
-        $commissionFee = $data['amount'] * (self::COMMISSION_FEE_PERCENTAGE / 100);
+        if (empty($data['amount']) || $data['amount'] <= 0) {
+            throw new TransactionException('Invalid transaction amount.');
+        }
+
+        $commissionFee = $this->calculateCommissionFee($data['amount']);
+
         $totalAmount = $data['amount'] + $commissionFee;
         $data['commission_fee'] = $commissionFee;
 
@@ -66,7 +79,7 @@ class TransactionService
 
             if ($lockedSender->balance < $totalAmount) {
                 // Throw an exception to rollback the database transaction
-                throw new InvalidArgumentException('Insufficient balance.');
+                throw new TransactionException('Insufficient balance.');
             }
 
 
@@ -90,7 +103,9 @@ class TransactionService
         $user->refresh();
         $receiverUser->refresh();
 
-        TransactionCreated::dispatch($transaction);
+        TransactionSent::dispatch($transaction);
+        TransactionReceived::dispatch($transaction);
+
         return $transaction;
     }
 }

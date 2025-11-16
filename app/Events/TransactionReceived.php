@@ -12,15 +12,20 @@ use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class TransactionCreated implements ShouldBroadcast, ShouldDispatchAfterCommit
+class TransactionReceived implements ShouldBroadcast, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
-
+    /**
+     * Create a new event instance.
+     */
     public function __construct(
         public Transaction $transaction,
-    ) {}
+    )
+    {
+        //
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *
@@ -29,7 +34,6 @@ class TransactionCreated implements ShouldBroadcast, ShouldDispatchAfterCommit
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('transactions.user.' . $this->transaction->sender_id),
             new PrivateChannel('transactions.user.' . $this->transaction->receiver_id),
         ];
     }

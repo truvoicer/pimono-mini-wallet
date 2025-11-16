@@ -7,7 +7,6 @@ use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use App\Repositories\Builders\DataBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use InvalidArgumentException;
 use App\Traits\Database\PaginationTrait;
 
 class BaseRepository
@@ -25,18 +24,6 @@ class BaseRepository
     ) {
         $this->dataBuilder = new DataBuilder($model);
         $this->initializeQuery();
-    }
-
-    public static function make(): self
-    {
-        if (!isset(static::$modelClass)) {
-            throw new InvalidArgumentException("Model class must be defined to create repository instance.");
-        }
-        if (!class_exists(static::$modelClass)) {
-            throw new InvalidArgumentException("Model class '" . static::$modelClass . "' does not exist.");
-        }
-        $model = new static::$modelClass();
-        return new self($model);
     }
 
     public function initializeQuery(): self
@@ -74,24 +61,6 @@ class BaseRepository
     public function delete(Model $model): ?bool
     {
         return $model->delete();
-    }
-
-    public function bulkDelete(array $ids, ?callable $queryCallback = null): int
-    {
-        if (empty($ids)) {
-            throw new \InvalidArgumentException('IDs must be a non-empty array.');
-        }
-        if ($queryCallback) {
-            $deleteQuery = $queryCallback($this->query);
-        } else {
-            $deleteQuery = $this->query
-                ->whereIn('id', $ids);
-        }
-        $deletedCount = $deleteQuery->delete();
-        if ($deletedCount === 0) {
-            throw new \RuntimeException('No records were deleted.');
-        }
-        return $deletedCount;
     }
 
     public function paginate()
