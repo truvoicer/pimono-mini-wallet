@@ -61,4 +61,9 @@ class User extends Authenticatable
         return $this->hasMany(Transaction::class, 'receiver_id');
     }
 
+    public function transactions()
+    {
+        return $this->sentTransactions()->union($this->receivedTransactions());
+    }
+
 }

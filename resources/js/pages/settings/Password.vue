@@ -32,7 +32,7 @@ const breadcrumbItems: BreadcrumbItem[] = [
                 />
 
                 <Form
-                    v-bind="PasswordController.update.form()"
+                    v-bind="PasswordController.update()"
                     :options="{
                         preserveScroll: true,
                     }"
