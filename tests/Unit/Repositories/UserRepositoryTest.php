@@ -73,7 +73,7 @@ class UserRepositoryTest extends TestCase
     // ========================================================================
 
 
-    public function it_initializes_with_a_user_model_query(): void
+    public function test_it_initializes_with_a_user_model_query(): void
     {
         // The query builder should point to the DummyUserModel's table
         $query = $this->repository->getQuery();
@@ -83,7 +83,7 @@ class UserRepositoryTest extends TestCase
     }
 
 
-    public function it_can_insert_a_user_record(): void
+    public function test_it_can_insert_a_user_record(): void
     {
         // Arrange
         $data = [
@@ -102,7 +102,7 @@ class UserRepositoryTest extends TestCase
     }
 
 
-    public function it_can_update_a_user_record(): void
+    public function test_it_can_update_a_user_record(): void
     {
         // Arrange
         $user = DummyUserModel::factory()->create(['balance' => 100.00]);
@@ -117,7 +117,7 @@ class UserRepositoryTest extends TestCase
     }
 
 
-    public function it_can_delete_a_user_record(): void
+    public function test_it_can_delete_a_user_record(): void
     {
         // Arrange
         $user = DummyUserModel::factory()->create();
@@ -132,7 +132,7 @@ class UserRepositoryTest extends TestCase
 
 
 
-    public function it_can_paginate_user_records(): void
+    public function test_it_can_paginate_user_records(): void
     {
         // Create test data
         DummyUserModel::factory()->count(15)->create();

@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            // It should record every transfer, including details likesender_id, receiver_id, amount, commission_fee, timestamp, etc.
             $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('receiver_id')->constrained('users')->onDelete('cascade');
             $table->decimal('amount', 15, 2);
             $table->decimal('commission_fee', 15, 2)->default(0);
+            $table->index(['sender_id', 'created_at']);
+            $table->index(['receiver_id', 'created_at']);
             $table->timestamps();
         });
     }

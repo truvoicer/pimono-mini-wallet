@@ -5,9 +5,10 @@ import { Head, router } from '@inertiajs/vue3';
 import { index } from '@/actions/App/Http/Controllers/TransactionController';
 import { Pagination } from '@/types/pagination';
 import { Transaction } from '@/types/Transaction';
-import { onMounted, watch } from 'vue';
+import { onMounted } from 'vue';
 import { User } from '@/types/user';
 import Transactions from '@/components/Transactions.vue';
+import { Currency } from '@/types/currency';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -19,6 +20,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 const props = defineProps<{
     transactions?: Pagination & { data: Transaction[] };
     user?: User;
+    settings: {
+        data: {
+            timezone: string;
+            currency: Currency;
+        };
+    } | null;
 }>();
 
 onMounted(() => {
@@ -28,12 +35,11 @@ onMounted(() => {
 </script>
 
 <template>
+
     <Head title="Transactions" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <Transactions
-            :transactions="props.transactions"
-            :user="props.user.data"
-        />
+        :transactions="props.transactions" :user="props.user.data" :settings="props.settings" />
     </AppLayout>
 </template>

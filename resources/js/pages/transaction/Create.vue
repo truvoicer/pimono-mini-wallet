@@ -5,7 +5,7 @@ import { Form, Head } from '@inertiajs/vue3';
 import { create, store } from '@/actions/App/Http/Controllers/TransactionController';
 import TextInput from '@/components/TextInput.vue';
 import Spinner from '@/components/ui/spinner/Spinner.vue';
-
+import { Currency } from '@/types/currency';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,6 +13,14 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: create().url,
     },
 ];
+const props = defineProps<{
+    settings: {
+        data: {
+            timezone: string;
+            currency: Currency;
+        };
+    } | null;
+}>();
 </script>
 
 <template>
@@ -20,7 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div
-            class="flex h-full self-center flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
+            class="flex h-full self-start justify-start flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4 md:max-w-lg"
         >
             <div
                 class="relative rounded-xl border border-sidebar-border/70  dark:border-sidebar-border p-6 md:max-w-lg"
@@ -37,7 +45,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <TextInput
                             label="Receiver ID"
                             id="receiver_id"
-                            type="text"
+                            type="number"
                             name="receiver_id"
                             required
                             autofocus
@@ -56,7 +64,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             autofocus
                             :tabindex="1"
                             autocomplete="amount"
-                            placeholder="Amount"
+                            :placeholder="`${props.settings?.data?.currency.symbol || '£'} 100`"
                             :error="errors.amount"
                         />
 

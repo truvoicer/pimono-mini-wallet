@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Transaction;
+namespace App\Http\Requests\Settings;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class TransactionUpdateRequest extends FormRequest
+class SettingUpdateRequest extends FormRequest
 {
 
     public function authorize(): bool
@@ -22,12 +21,12 @@ class TransactionUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'receiver_id' => [
-                'sometimes',
+            'timezone' => ['required', 'string', 'max:255'],
+            'currency_id' => [
+                'nullable',
                 'integer',
-                Rule::exists(User::class, 'id'),
+                Rule::exists('currencies', 'id'),
             ],
-            'amount' => ['sometimes', 'numeric', 'min:0.01'],
         ];
     }
 }

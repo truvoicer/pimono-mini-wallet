@@ -5,13 +5,11 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Events\TransactionCreated;
 use App\Events\TransactionReceived;
 use App\Events\TransactionSent;
 use App\Models\Transaction;
 use App\Services\Transaction\TransactionService;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Session;
 use Inertia\Middleware;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -19,22 +17,15 @@ class TransactionTest extends TestCase
 {
     use RefreshDatabase;
 
-    // --- SETUP ---
     private User $user;
 
     protected function setUp(): void
     {
         parent::setUp();
-        // Create an authenticated user for most tests
         $this->user = User::factory()->create(['balance' => 1000]);
 
-        // Prevent the actual broadcasting logic from running during tests
         Event::fake();
     }
-
-    // ========================================================================
-    // INDEX METHOD TESTS
-    // ========================================================================
 
     /**
      * Helper to get the current Inertia asset version.
@@ -46,14 +37,14 @@ class TransactionTest extends TestCase
     }
 
 
-    public function guests_cannot_access_the_transaction_index_page(): void
+    public function test_guests_cannot_access_the_transaction_index_page(): void
     {
         $this->get(route('transaction.index'))
             ->assertRedirect(route('login'));
     }
 
 
-    public function authenticated_user_can_view_the_transaction_index(): void
+    public function test_authenticated_user_can_view_the_transaction_index(): void
     {
         $receiver = User::factory()->create();
         // Arrange: Create a transaction for the user and one for another user
@@ -83,7 +74,7 @@ class TransactionTest extends TestCase
     }
 
 
-    public function partial_reload_to_index_correctly_includes_optional_transactions_prop(): void
+    public function test_partial_reload_to_index_correctly_includes_optional_transactions_prop(): void
     {
         $receiver = User::factory()->create();
         // Arrange: Create a transaction for the user and one for another user
@@ -121,7 +112,7 @@ class TransactionTest extends TestCase
     // ========================================================================
 
 
-    public function guests_cannot_access_the_transaction_create_page(): void
+    public function test_guests_cannot_access_the_transaction_create_page(): void
     {
         $this->get(route('transaction.create'))
             ->assertRedirect(route('login'));
@@ -144,7 +135,7 @@ class TransactionTest extends TestCase
     // ========================================================================
 
 
-    public function guests_cannot_create_a_transaction(): void
+    public function test_guests_cannot_create_a_transaction(): void
     {
         $this->post(route('transaction.store'), [])
             ->assertRedirect(route('login'));
@@ -154,7 +145,7 @@ class TransactionTest extends TestCase
     }
 
 
-    public function transaction_store_request_requires_valid_data(): void
+    public function test_transaction_store_request_requires_valid_data(): void
     {
         $this->actingAs($this->user)
             ->post(route('transaction.store'), [])
@@ -163,7 +154,7 @@ class TransactionTest extends TestCase
     }
 
 
-    public function authenticated_user_can_successfully_store_a_transaction(): void
+    public function test_authenticated_user_can_successfully_store_a_transaction(): void
     {
         // Arrange
         $receiver = User::factory()->create();
@@ -171,22 +162,6 @@ class TransactionTest extends TestCase
             'receiver_id' => $receiver->id,
             'amount' => 500,
         ];
-        // $mockTransaction = Transaction::factory()->make($transactionData);
-
-        // // Mock the TransactionService to isolate the controller's logic
-        // $mockService = $this->createMock(TransactionService::class);
-
-        // // Expect the storeTransaction method to be called once with the correct data
-        // $mockService->expects($this->once())
-        //             ->method('storeTransaction')
-        //             ->with(
-        //                 $this->user,
-        //                 $transactionData
-        //             )
-        //             ->willReturn($mockTransaction);
-
-        // Bind the mock instance to the service container
-        // $this->app->instance(TransactionService::class, $mockService);
 
         // Act & Assert
         $this->actingAs($this->user)
@@ -200,7 +175,7 @@ class TransactionTest extends TestCase
     }
 
 
-    public function transaction_store_handles_insufficient_balance_exception(): void
+    public function test_transaction_store_handles_insufficient_balance_exception(): void
     {
         // Arrange
         $receiver = User::factory()->create();

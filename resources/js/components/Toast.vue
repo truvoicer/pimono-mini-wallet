@@ -66,13 +66,13 @@ function hideToast() {
     }
 }
 
-watch(() => page.props.flash, (newFlash: { success?: string; error?: string }) => {
-    if (newFlash?.success) {
-        showToast(newFlash.success, 'success', 'top-right');
-    } else if (newFlash?.error) {
-        showToast(newFlash.error, 'error', 'top-right');
-    }
-}, { deep: true });
+// watch(() => page.props.flash, (newFlash: { success?: string; error?: string }) => {
+//     if (newFlash?.success) {
+//         showToast(newFlash.success, 'success', 'top-right');
+//     } else if (newFlash?.error) {
+//         showToast(newFlash.error, 'error', 'top-right');
+//     }
+// }, { deep: true });
 
 watch(() => props.show, (newValue: boolean) => {
     isVisible.value = newValue;

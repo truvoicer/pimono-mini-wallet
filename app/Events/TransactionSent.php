@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\Setting;
 use App\Models\Transaction;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -21,6 +22,28 @@ class TransactionSent implements ShouldBroadcast, ShouldDispatchAfterCommit
     public function __construct(
         public Transaction $transaction,
     ) {}
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        $settings = Setting::with('currency')->first();
+        return [
+            'message' => sprintf(
+                'You have sent a transaction of amount %s%s to user %s (%s).',
+                $settings && $settings->currency ? $settings->currency->symbol : '£',
+                number_format($this->transaction->amount, 2),
+                $this->transaction->receiver->name,
+                $this->transaction->receiver->email,
+
+            ),
+            'transaction_id' => $this->transaction->id
+        ];
+    }
+
     /**
      * Get the channels the event should broadcast on.
      *

@@ -53,7 +53,7 @@ class DataBuilderTest extends TestCase
         $this->builder = new DataBuilder($this->model);
     }
 
-    public function it_filters_input_data_to_only_include_fillable_fields(): void
+    public function test_it_filters_input_data_to_only_include_fillable_fields(): void
     {
 
         $data = [
@@ -70,7 +70,7 @@ class DataBuilderTest extends TestCase
         $this->assertArrayNotHasKey('extra_field', $result);
     }
 
-    public function it_processes_data_from_a_standard_request(): void
+    public function test_it_processes_data_from_a_standard_request(): void
     {
         $request = new Request([
             'name' => 'Pimono',
@@ -85,7 +85,7 @@ class DataBuilderTest extends TestCase
         $this->assertArrayNotHasKey('unfillable_key', $result);
     }
 
-    public function it_processes_data_from_a_form_request_using_validated_data(): void
+    public function test_it_processes_data_from_a_form_request_using_validated_data(): void
     {
 
         // TestFormRequest returns validated data, including 'password' which is not fillable
@@ -102,7 +102,7 @@ class DataBuilderTest extends TestCase
         $this->assertArrayNotHasKey('extra_validated', $result);
     }
 
-    public function it_ignores_specified_fields_from_the_request_before_filtering(): void
+    public function test_it_ignores_specified_fields_from_the_request_before_filtering(): void
     {
         $request = new Request([
             'name' => 'pimono',
@@ -123,7 +123,7 @@ class DataBuilderTest extends TestCase
         ], $result);
     }
 
-    public function custom_data_overrides_request_data(): void
+    public function test_custom_data_overrides_request_data(): void
     {
 
         $request = new Request([
@@ -148,7 +148,7 @@ class DataBuilderTest extends TestCase
         ], $result);
     }
 
-    public function it_returns_empty_array_with_no_input(): void
+    public function test_it_returns_empty_array_with_no_input(): void
     {
         $result = $this->builder->build();
         $this->assertEquals([], $result);

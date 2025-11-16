@@ -65,7 +65,7 @@ class TransactionRepositoryTest extends TestCase
         $this->repository = new TransactionRepository();
     }
 
-    public function it_initializes_with_a_transaction_model_query(): void
+    public function test_it_initializes_with_a_transaction_model_query(): void
     {
         $query = $this->repository->getQuery();
 
@@ -74,7 +74,7 @@ class TransactionRepositoryTest extends TestCase
     }
 
 
-    public function it_can_insert_a_transaction_record(): void
+    public function test_it_can_insert_a_transaction_record(): void
     {
         $sender = User::factory()->create();
         $receiver = User::factory()->create();
@@ -92,7 +92,7 @@ class TransactionRepositoryTest extends TestCase
     }
 
 
-    public function it_can_paginate_transactions(): void
+    public function test_it_can_paginate_transactions(): void
     {
         DummyTransactionModel::factory()->count(15)->create();
 

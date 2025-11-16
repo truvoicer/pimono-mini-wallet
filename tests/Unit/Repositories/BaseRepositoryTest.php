@@ -88,7 +88,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_initializes_with_an_eloquent_query_and_data_builder(): void
+    public function test_it_initializes_with_an_eloquent_query_and_data_builder(): void
     {
         // Assert the initial query is an Eloquent Builder instance
         $this->assertInstanceOf(Builder::class, $this->repository->getQuery());
@@ -98,7 +98,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_can_set_and_get_the_query_builder(): void
+    public function test_it_can_set_and_get_the_query_builder(): void
     {
         $newQuery = TestModel::where('value', '>', 10);
 
@@ -109,7 +109,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function initialize_query_resets_the_query_to_a_new_instance(): void
+    public function test_initialize_query_resets_the_query_to_a_new_instance(): void
     {
         $originalQuery = $this->repository->getQuery();
 
@@ -126,7 +126,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_can_insert_a_record_and_return_the_model(): void
+    public function test_it_can_insert_a_record_and_return_the_model(): void
     {
         $data = ['name' => 'New Item', 'value' => 50];
 
@@ -139,7 +139,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_can_update_an_existing_record(): void
+    public function test_it_can_update_an_existing_record(): void
     {
 
         $model = TestModel::factory()->create(['name' => 'Old Name', 'value' => 10]);
@@ -156,7 +156,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_can_delete_an_existing_record(): void
+    public function test_it_can_delete_an_existing_record(): void
     {
 
         $model = TestModel::factory()->create(['name' => 'To Be Deleted', 'value' => 100]);
@@ -170,7 +170,7 @@ class BaseRepositoryTest extends TestCase
     }
 
 
-    public function it_can_paginate_the_current_query(): void
+    public function test_it_can_paginate_the_current_query(): void
     {
         TestModel::factory()->count(20)->create();
 

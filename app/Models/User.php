@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use App\Enums\Role\Role as RoleEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -66,4 +68,18 @@ class User extends Authenticatable
         return $this->sentTransactions()->union($this->receivedTransactions());
     }
 
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'role_users');
+    }
+
+    public function assignRole(RoleEnum $roleEnum) : void
+    {
+        $role = Role::where('name', $roleEnum->value)->first();
+        if ($role) {
+            $this->roles()->sync([$role->id]);
+        } else {
+            throw new \Exception("Role not found: {$roleEnum->value}");
+        }
+    }
 }

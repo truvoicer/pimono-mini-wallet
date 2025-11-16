@@ -40,7 +40,8 @@ function getNestedField(row: Record<string, any>, field: string): any {
                 <tr v-else v-for="(row, rowIndex) in data.data" :key="rowIndex">
                     <td v-for="(column, colIndex) in columns" :key="colIndex"
                         class="border-b border-sidebar-border/70 px-4 py-2 dark:border-sidebar-border">
-                        <template v-if="column.field.includes('.')">
+                        <slot v-if="$slots[column.field]" :name="column.field" :row="row" />
+                        <template v-else-if="column.field.includes('.')">
                             {{ getNestedField(row, column.field) }}
                         </template>
                         <template v-else>
