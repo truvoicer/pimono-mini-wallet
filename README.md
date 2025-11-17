@@ -1,5 +1,16 @@
 # Technical Assignment: "Mini Wallet" Application
 
+### Brief
+
+The app has a transactions page and a transfer page.
+
+On the bottom of the sidebar you can change user settings such as profile, currency, theme, password etc.
+
+I added roles for the users, only admins and superusers can change some of the settings such as currency.
+
+I also added a policy for changing settings (SettingPolicy)
+
+I added phpstan for static analysis as well.
 
 ### Setup Guide
 1. Clone repository
@@ -45,11 +56,15 @@ php artisan queue:work
 php artisan serve
 ```
 
-12. Navigate to the homepage and you should be redirected to the login page
+11. Navigate to the homepage and you should be redirected to the login page
 
-11. You can run tests with
+12. You can run tests with
 ```
 php artisan test
+```
+13. You can run phpstan with
+```
+./vendor/bin/phpstan analyse
 ```
 
 

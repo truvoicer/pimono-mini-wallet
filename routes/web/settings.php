@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
     })->name('appearance.edit');
 
     Route::get('settings', [SettingsController::class, 'edit'])
-        ->name('settings.edit');
+        ->name('settings.edit')->middleware('can:edit,App\Models\Setting');
     Route::post('settings', [SettingsController::class, 'update'])
-        ->name('settings.update');
+        ->name('settings.update')->middleware('can:update,App\Models\Setting');
 });

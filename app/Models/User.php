@@ -82,4 +82,20 @@ class User extends Authenticatable
             throw new \Exception("Role not found: {$roleEnum->value}");
         }
     }
+
+    /**
+     * Check if the user has a specific role.
+     *
+     * @param array $roles The names of the roles to check for.
+     * @return bool
+     */
+    public function hasRole(array $roles): bool
+    {
+        foreach ($roles as $role) {
+            if ($this->roles->contains('name', $role)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

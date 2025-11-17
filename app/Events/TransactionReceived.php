@@ -32,11 +32,17 @@ class TransactionReceived implements ShouldBroadcast, ShouldDispatchAfterCommit
      */
     public function broadcastWith(): array
     {
+        /** @var Setting|\Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null $settings */
         $settings = Setting::with('currency')->first();
+        if (! $settings instanceof Setting) {
+            $currencySymbol = '£';
+        } else {
+            $currencySymbol = $settings->currency->symbol ?? '£';
+        }
         return [
             'message' => sprintf(
                 'You have received a new transaction of amount %s%s from user %s (%s).',
-                $settings && $settings->currency ? $settings->currency->symbol : '£',
+                $currencySymbol,
                 number_format($this->transaction->amount, 2),
                 $this->transaction->sender->name,
                 $this->transaction->sender->email,
