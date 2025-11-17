@@ -63,8 +63,38 @@ php artisan serve
 ```
 
 11. Navigate to the homepage and you should be redirected to the login page
+```
+You can login with any of these users which were seeded
+[
+    [
+        'name' => 'Super User',
+        'email' => 'super@example.com',
+        'password' => 'password', // password
+        'role' => Role::SUPERUSER,
+    ],
+    [
+        'name' => 'Admin User',
+        'email' => 'admin@example.com',
+        'password' => 'password', // password
+        'role' => Role::ADMIN,
+    ],
+    [
+        'name' => 'Regular User',
+        'email' => 'user@example.com',
+        'password' => 'password', // password
+        'role' => Role::USER,
+    ],
+    [
+        'name' => 'Guest User',
+        'email' => 'guest@example.com',
+        'password' => 'password', // password
+        'role' => Role::GUEST,
+    ],
+];
+];
+```
 
-12. You can run tests with
+13. You can run tests with
 ```
 php artisan test
 ```
