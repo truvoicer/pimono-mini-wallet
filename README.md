@@ -21,9 +21,10 @@ git clone https://github.com/truvoicer/pimono-mini-wallet.git
 ```
 cd pimono-mini-wallet
 ```
-4. Copy .env
+4. Copy .env and generate key
 ```
-cp .env-example .env
+cp .env.example .env
+php artisan key:generate
 ```
 5. Fill in .env vars (PUSHER, DB, APP_URL etc.)
 
