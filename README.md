@@ -21,12 +21,6 @@ git clone https://github.com/truvoicer/pimono-mini-wallet.git
 ```
 cd pimono-mini-wallet
 ```
-4. Copy .env and generate key
-```
-cp .env.example .env
-php artisan key:generate
-```
-5. Fill in .env vars (PUSHER, DB, APP_URL etc.)
 
 6. Install dependencies
 ```
@@ -34,36 +28,47 @@ composer install
 npm install
 ```
 
-7. Migrate and seed db
+7. Copy .env
+```
+cp .env.example .env
+```
+8. Fill in .env vars (PUSHER, DB, APP_URL etc.)
+
+9. Copy .env and generate key
+```
+php artisan key:generate
+```
+
+10. Migrate and seed db
 ```
 php artisan migrate:fresh
 php artisan db:seed
 ```
 
-8. Build
+11. Build
 ```
 npm run build
 ```
 
-9. Cache routes/config and start queue worker
+12. Cache routes/config and start queue worker
 ```
 php artisan config:clear
 php artisan route:cache
 php artisan queue:work
 ```
 
-10. If you have Laravel Herd installed you should be able to go to the site url, if not then run:
+13. If you have Laravel Herd installed you should be able to go to the site url, if not then run:
 ```
 php artisan serve
 ```
 
-11. Navigate to the homepage and you should be redirected to the login page
+14. Navigate to the homepage and you should be redirected to the login page
 
-12. You can run tests with
+15. You can run tests with
 ```
 php artisan test
 ```
-13. You can run phpstan with
+16. You can run phpstan with
 ```
 ./vendor/bin/phpstan analyse
 ```
